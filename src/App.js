@@ -10,14 +10,22 @@ class App extends Component {
       textColor: '',
       points: 0,
       lives: 3,
-      secondsElapsed: 0
+      secondsElapsed: 0,
+      isStarted: false
     }
     this.incrementer = null
   }
   
   componentDidMount = () => {
-    this.startTimer();
     this.setColors();
+  }
+
+  setColors = () => {
+    const colors = ['yellow', 'green', 'blue', 'red', 'black'];
+    this.setState({
+      bgColor: colors[Math.floor(Math.random()*colors.length)],
+      textColor: colors[Math.floor(Math.random()*colors.length)]
+    })
   }
 
   componentDidUpdate = () => {
@@ -37,15 +45,6 @@ class App extends Component {
     })
     this.stopTimer()
     alert(alert_message)
-    this.startTimer()
-  }
-
-  setColors = () => {
-    const colors = ['yellow', 'green', 'blue', 'red', 'black'];
-    this.setState({
-      bgColor: colors[Math.floor(Math.random()*colors.length)],
-      textColor: colors[Math.floor(Math.random()*colors.length)]
-    })
   }
 
   startTimer() {
@@ -56,6 +55,9 @@ class App extends Component {
 
   stopTimer() {
     clearInterval(this.incrementer)
+    this.setState({
+      isStarted: false
+    })
   }
 
   timer = () => {
@@ -75,6 +77,18 @@ class App extends Component {
     })
   }
 
+  minusLife = () => {
+    this.setState({
+      lives: this.state.lives - 1 
+    })
+  }
+
+  plusPoint = () => {
+    this.setState({
+      points: this.state.points + 1
+    })
+  }
+
   trueClicked = () => {
     (this.state.bgColor === this.state.textColor) ? this.plusPoint() : this.minusLife()
     this.setColors();
@@ -87,16 +101,48 @@ class App extends Component {
     this.resetTimer();
   }
 
-  minusLife = () => {
+  Header = (isStarted) => {
+    if (!isStarted) {
+      return (
+        <button onClick={() => {this.startClicked()}}>
+          Start
+        </button>
+      )
+    } else {
+      return (
+        <p>
+          {this.state.secondsElapsed}
+        </p>
+      )
+    }
+  }
+
+  startClicked = () => {
+    this.startTimer();
+
     this.setState({
-      lives: this.state.lives - 1 
+      isStarted: true
     })
   }
 
-  plusPoint = () => {
-    this.setState({
-      points: this.state.points + 1
-    })
+  Interaction = () => {
+    if (this.state.isStarted) {
+      return (
+        <div>
+          <button onClick={() => {this.trueClicked()}}>
+            True
+          </button>
+
+          <button onClick={() => {this.falseClicked()}}>
+            False
+          </button>
+
+          {this.Lives()}
+
+          {this.Points()}
+        </div>
+      )
+    }
   }
 
   Lives = () => {
@@ -113,31 +159,18 @@ class App extends Component {
     return ( <p>{sentence}</p> )
   }
 
-
   render() {
 
     return (
       <div className="container">
-        <p>
-          {this.state.secondsElapsed}
-        </p>
+
+        {this.Header(this.state.isStarted)}
 
         <div className="colorBox" style={{ backgroundColor: this.state.bgColor }}>
           <h3 className="colorText">{this.state.textColor}</h3>
         </div>
 
-        <button onClick={() => {this.trueClicked()}}>
-          True
-        </button>
-
-        <button onClick={() => {this.falseClicked()}}>
-          False
-        </button>
-
-        {this.Lives()}
-
-        {this.Points()}
-
+        {this.Interaction()}
 
       </div>
     );
