@@ -22,22 +22,22 @@ class App extends Component {
 
   componentDidUpdate = () => {
     if (this.state.points === 10) {
-      alert("Hooray!");
-      this.reset();
+      this.reset("Hooray!")
     }
 
     if (this.state.lives === 0) {
-      alert("Game Over");
-      this.reset();
+      this.reset("Game Over")
     }
   }
 
-  reset = () => {
+  reset = (alert_message) => {
     this.setState({
       lives: 3,
       points: 0
     })
-
+    this.stopTimer()
+    alert(alert_message)
+    this.startTimer()
   }
 
   setColors = () => {
@@ -52,6 +52,10 @@ class App extends Component {
     this.incrementer = setInterval( () =>
       this.timer()
     , 1000);  
+  }
+
+  stopTimer() {
+    clearInterval(this.incrementer)
   }
 
   timer = () => {
