@@ -37,6 +37,7 @@ class App extends Component {
       lives: 3,
       points: 0
     })
+
   }
 
   setColors = () => {
@@ -95,20 +96,19 @@ class App extends Component {
   }
 
   Lives = () => {
-    if (this.state.lives !== 1) {
-      return <p>You have {this.state.lives} lives</p>;
-    } else {
-      return <p>You have {this.state.lives} life</p>;
-    }
+    const life_word = (this.state.lives !== 1) ? 'lives' : 'life'
+    const sentence = `You have ${this.state.lives} ${life_word}`
+
+    return ( <p>{sentence}</p> )
   }
 
   Points = () => {
-    if (this.state.points !== 1) {
-      return <p>{this.state.points} points</p>;
-    } else {
-      return <p>{this.state.points} point</p>;
-    }
+    const point_word = (this.state.points !== 1) ? 'points' : 'point'
+    const sentence = `${this.state.points} ${point_word}`
+    
+    return ( <p>{sentence}</p> )
   }
+
 
   render() {
 
