@@ -9,20 +9,15 @@ class App extends Component {
       bgColor: '',
       textColor: '',
       points: 0,
-      lives: 3
+      lives: 3,
+      secondsElapsed: 0
     }
+    this.incrementer = null
   }
-
+  
   componentDidMount = () => {
+    this.startTimer();
     this.setColors();
-  }
-
-  setColors = () => {
-    const colors = ['yellow', 'green', 'blue', 'red', 'black'];
-    this.setState({
-      bgColor: colors[Math.floor(Math.random()*colors.length)],
-      textColor: colors[Math.floor(Math.random()*colors.length)]
-    })
   }
 
   componentDidUpdate = () => {
@@ -44,30 +39,59 @@ class App extends Component {
     })
   }
 
-  trueClicked = () => {
-    if (this.state.bgColor === this.state.textColor) {
-      this.setState({
-        points: this.state.points + 1
-      })
-    } else {
-      this.setState({
-        lives: this.state.lives - 1 
-      })
+  setColors = () => {
+    const colors = ['yellow', 'green', 'blue', 'red', 'black'];
+    this.setState({
+      bgColor: colors[Math.floor(Math.random()*colors.length)],
+      textColor: colors[Math.floor(Math.random()*colors.length)]
+    })
+  }
+
+  startTimer() {
+    this.incrementer = setInterval( () =>
+      this.timer()
+    , 1000);  
+  }
+
+  timer = () => {
+    if (this.state.secondsElapsed === 5) {
+      this.resetTimer()
+      this.setColors()
+      this.minusLife()
     }
+    this.setState({
+      secondsElapsed: this.state.secondsElapsed + 1
+    })
+  }
+
+  resetTimer = () => {
+    this.setState({
+      secondsElapsed: 0
+    })
+  }
+
+  trueClicked = () => {
+    (this.state.bgColor === this.state.textColor) ? this.plusPoint() : this.minusLife()
     this.setColors();
+    this.resetTimer();
   }
 
   falseClicked = () => {
-    if (this.state.bgColor !== this.state.textColor) {
-      this.setState({
-        points: this.state.points + 1
-      })
-    } else {
-       this.setState({
-        lives: this.state.lives - 1 
-      })
-    }
+    (this.state.bgColor !== this.state.textColor) ? this.plusPoint() : this.minusLife()
     this.setColors();
+    this.resetTimer();
+  }
+
+  minusLife = () => {
+    this.setState({
+      lives: this.state.lives - 1 
+    })
+  }
+
+  plusPoint = () => {
+    this.setState({
+      points: this.state.points + 1
+    })
   }
 
   Lives = () => {
@@ -86,11 +110,14 @@ class App extends Component {
     }
   }
 
-
   render() {
 
     return (
       <div className="container">
+        <p>
+          {this.state.secondsElapsed}
+        </p>
+
         <div className="colorBox" style={{ backgroundColor: this.state.bgColor }}>
           <h3 className="colorText">{this.state.textColor}</h3>
         </div>
