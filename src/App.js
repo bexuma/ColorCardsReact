@@ -102,15 +102,9 @@ class App extends Component {
   }
 
   Header = (isStarted) => {
-    if (!isStarted) {
+    if (isStarted) {
       return (
-        <button onClick={() => {this.startClicked()}}>
-          Start
-        </button>
-      )
-    } else {
-      return (
-        <p>
+        <p className="timer">
           {this.state.secondsElapsed}
         </p>
       )
@@ -129,17 +123,25 @@ class App extends Component {
     if (this.state.isStarted) {
       return (
         <div>
-          <button onClick={() => {this.trueClicked()}}>
+          <button onClick={() => {this.trueClicked()}} className="choice">
             True
           </button>
 
-          <button onClick={() => {this.falseClicked()}}>
+          <button onClick={() => {this.falseClicked()}} className="choice">
             False
           </button>
 
           {this.Lives()}
 
           {this.Points()}
+        </div>
+      )
+    } else {
+      return (
+        <div>
+          <button onClick={() => {this.startClicked()}} className="start">
+            Start
+          </button>
         </div>
       )
     }
@@ -163,11 +165,9 @@ class App extends Component {
 
     return (
       <div className="container">
-
-        {this.Header(this.state.isStarted)}
-
         <div className="colorBox" style={{ backgroundColor: this.state.bgColor }}>
           <h3 className="colorText">{this.state.textColor}</h3>
+          {this.Header(this.state.isStarted)}
         </div>
 
         {this.Interaction()}
